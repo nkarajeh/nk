@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Fall 2026 Counseling Planner</title>
+<style>
+:root{
+  --bg:#f7f7f5;--paper:#fff;--ink:#272725;--muted:#787774;--line:#e8e8e4;
+  --soft:#f1f1ef;--soft2:#fafaf9;--danger:#c74440;--shadow:0 1px 2px rgba(0,0,0,.04),0 12px 30px rgba(0,0,0,.05)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit} button{cursor:pointer}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{background:#fbfbfa;border-right:1px solid var(--line);padding:16px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;padding:8px 10px 18px}
+.brand-icon{width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;box-shadow:var(--shadow)}
+.navbtn{width:100%;border:0;background:transparent;text-align:left;padding:9px 10px;border-radius:7px;color:#474744;display:flex;align-items:center;gap:9px}
+.navbtn:hover,.navbtn.active{background:var(--soft);color:#1f1f1d}
+.side-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#999894;padding:20px 10px 7px}
+.dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+main{min-width:0}
+.topbar{height:58px;background:rgba(247,247,245,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:5}
+.topbar .right{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:#464642;padding:8px 11px;border-radius:7px}
+.btn:hover{background:#fafaf8}
+.btn.primary{background:#2f2f2d;color:#fff;border-color:#2f2f2d}
+.btn.danger{color:var(--danger)}
+.page{max-width:1240px;margin:0 auto;padding:40px 38px 80px}
+h1{font-size:34px;letter-spacing:-.03em;margin:0 0 6px}
+.subtitle{color:var(--muted);margin-bottom:24px;max-width:820px}
+.course-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.course-card{background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:14px}
+.course-card h3{font-size:13px;margin:9px 0 2px}
+.course-card p{margin:0;color:var(--muted);font-size:12px}
+.bar{height:6px;background:var(--soft);border-radius:99px;overflow:hidden;margin-top:11px}
+.bar span{display:block;height:100%;border-radius:99px}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px}
+.stat .n{font-size:24px;font-weight:750;letter-spacing:-.03em}
+.stat .l{color:var(--muted);font-size:11px}
+.toolbar{display:grid;grid-template-columns:minmax(220px,1fr) repeat(3,auto);gap:8px;align-items:center;margin:12px 0 14px}
+.search,select{background:#fff;border:1px solid var(--line);border-radius:7px;padding:9px 10px;color:#444}
+.section-head{display:flex;align-items:end;justify-content:space-between;margin-top:26px}
+h2{font-size:18px;margin:0}
+.tiny{font-size:12px;color:var(--muted)}
+.board{display:grid;gap:10px}
+.task-card{background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden;box-shadow:0 1px 1px rgba(0,0,0,.015)}
+.task-main{display:grid;grid-template-columns:minmax(0,1.7fr) 150px 165px 170px 90px;gap:12px;align-items:center;padding:13px 14px}
+.task-card.done .task-title{text-decoration:line-through;color:#999894}
+.task-title-row{display:flex;gap:9px;align-items:flex-start}
+.check{appearance:none;width:19px;height:19px;border:1.5px solid #b8b8b3;border-radius:5px;margin:2px 0 0;display:grid;place-items:center;flex:0 0 auto}
+.check:checked{background:#383835;border-color:#383835}
+.check:checked:after{content:'✓';color:white;font-size:12px}
+.task-title{font-weight:650;font-size:14px}
+.task-note{color:var(--muted);font-size:12px;margin-top:3px}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fafaf9;border-radius:99px;padding:4px 8px;font-size:11px;white-space:nowrap}
+.verify{background:#fff8e7;border-color:#f1dfaa;color:#8b6819}
+.overdue{color:var(--danger);font-weight:650}
+.soon{color:#9a6815;font-weight:650}
+.progress-wrap{display:flex;align-items:center;gap:8px}
+.progress-track{height:7px;background:var(--soft);border-radius:99px;overflow:hidden;flex:1}
+.progress-fill{height:100%;background:#373735;border-radius:99px}
+.progress-label{font-size:12px;color:#595956;min-width:34px;text-align:right}
+.task-actions{display:flex;justify-content:flex-end;gap:5px}
+.iconbtn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 8px;color:#5a5a57}
+.iconbtn:hover{background:var(--soft2)}
+.details{display:none;border-top:1px solid var(--line);padding:14px;background:#fcfcfb}
+.task-card.open .details{display:block}
+.detail-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+.detail-title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#92918d;margin-bottom:7px}
+.range-row{display:grid;grid-template-columns:1fr 54px;gap:9px;align-items:center}
+input[type=range]{width:100%}
+textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fff}
+.subtask-list{display:grid;gap:7px;margin-bottom:8px}
+.subtask{display:flex;align-items:center;gap:8px}
+.subtask input[type=text]{flex:1;border:1px solid var(--line);border-radius:7px;padding:7px 8px;background:#fff}
+.subadd{display:flex;gap:7px}
+.subadd input{flex:1;border:1px solid var(--line);border-radius:7px;padding:8px 9px}
+.empty{padding:42px;text-align:center;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:10px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.25);display:none;place-items:center;z-index:30;padding:18px}
+.modal.open{display:grid}
+.modalbox{background:#fff;width:min(650px,100%);max-height:92vh;overflow:auto;border-radius:13px;border:1px solid var(--line);box-shadow:0 25px 70px rgba(0,0,0,.18);padding:20px}
+.modalbox h3{margin:0 0 16px;font-size:19px}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{font-size:12px;color:#666}
+label span{display:block;margin-bottom:5px}
+.field{width:100%;border:1px solid var(--line);border-radius:7px;padding:9px 10px;background:#fff}
+.span2{grid-column:1/-1}
+.modal-actions{display:flex;justify-content:space-between;gap:8px;margin-top:17px}
+.modal-actions .right{display:flex;gap:8px}
+.callout{margin-top:18px;padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#696965;font-size:12px}
+@media(max-width:1050px){
+  .task-main{grid-template-columns:minmax(0,1.5fr) 145px 145px 80px}
+  .type-col{display:none}
+  .stats{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:900px){
+  .app{grid-template-columns:1fr} aside{display:none} .page{padding:28px 16px 60px} .topbar{padding:0 16px}
+  .course-grid{grid-template-columns:repeat(2,1fr)} .toolbar{grid-template-columns:1fr 1fr} .task-main{grid-template-columns:1fr 125px 78px} .due-col{display:none}
+  .detail-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .course-grid,.stats{grid-template-columns:1fr 1fr} h1{font-size:28px} .toolbar{grid-template-columns:1fr}
+  .task-main{grid-template-columns:1fr 72px} .progress-col{display:none} .formgrid{grid-template-columns:1fr} .span2{grid-column:auto}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><div class="brand-icon">✓</div><span>Fall 2026 Planner</span></div>
+  <button class="navbtn active" data-view="all">⌂ &nbsp;All assignments</button>
+  <button class="navbtn" data-view="active">◷ &nbsp;In progress</button>
+  <button class="navbtn" data-view="upcoming">→ &nbsp;Upcoming 14 days</button>
+  <button class="navbtn" data-view="verify">! &nbsp;Needs Canvas check</button>
+  <button class="navbtn" data-view="done">✓ &nbsp;Completed</button>
+  <div class="side-title">Courses</div>
+  <div id="sideCourses"></div>
+  <div class="side-title">Data</div>
+  <button class="navbtn" id="exportBtn">⇩ &nbsp;Export planner data</button>
+  <button class="navbtn" id="importBtn">⇧ &nbsp;Import planner data</button>
+  <input type="file" id="importFile" accept="application/json" hidden>
+</aside>
+
+<main>
+  <div class="topbar">
+    <div class="tiny" id="todayLabel"></div>
+    <div class="right">
+      <button class="btn" id="exportTop">Export</button>
+      <button class="btn primary" id="addBtn">+ New task</button>
+    </div>
+  </div>
+
+  <div class="page">
+    <h1>Fall 2026 Counseling Planner</h1>
+    <div class="subtitle">Edit due dates, track how far you are on every assignment, keep progress notes, break work into subtasks, and add anything else you need. Everything saves automatically on this device.</div>
+
+    <div class="course-grid" id="courseGrid"></div>
+    <div class="stats" id="stats"></div>
+
+    <div class="section-head">
+      <div><h2 id="viewTitle">Assignments</h2><div class="tiny" id="viewMeta"></div></div>
+    </div>
+
+    <div class="toolbar">
+      <input class="search" id="search" placeholder="Search assignments, notes, chapters…">
+      <select id="courseFilter"><option value="all">All courses</option></select>
+      <select id="typeFilter"><option value="all">All types</option></select>
+      <select id="sort">
+        <option value="due">Sort: due date</option>
+        <option value="progress">Sort: progress</option>
+        <option value="course">Sort: course</option>
+        <option value="type">Sort: type</option>
+      </select>
+    </div>
+
+    <div class="board" id="board"></div>
+    <div id="empty" class="empty" hidden>No assignments match this view.</div>
+
+    <div class="callout"><strong>How this version works:</strong> click any assignment to open its workspace. You can change progress with the slider, type private progress notes, and add subtasks. Use <strong>Edit</strong> to change the title, due date/time, course, points, or Canvas-verification flag. Syllabus assignments can be edited without being permanently lost because the original seed stays in the file; your changes are stored as overrides in the browser.</div>
+  </div>
+</main>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modalbox">
+    <h3 id="modalTitle">Add a task</h3>
+    <div class="formgrid">
+      <label class="span2"><span>Task name</span><input class="field" id="mTitle"></label>
+      <label><span>Course</span><select class="field" id="mCourse"></select></label>
+      <label><span>Type</span><input class="field" id="mType" value="Assignment"></label>
+      <label><span>Due date & time</span><input class="field" id="mDue" type="datetime-local"></label>
+      <label><span>Points (optional)</span><input class="field" id="mPoints" type="number" min="0"></label>
+      <label><span>Starting progress</span><input class="field" id="mProgress" type="number" min="0" max="100" value="0"></label>
+      <label><span>Needs Canvas verification?</span><select class="field" id="mVerify"><option value="false">No</option><option value="true">Yes</option></select></label>
+      <label class="span2"><span>Description / reminder</span><textarea class="field" id="mNote"></textarea></label>
+    </div>
+    <div class="modal-actions">
+      <div><button class="btn danger" id="deleteModal" hidden>Delete task</button></div>
+      <div class="right"><button class="btn" id="cancelModal">Cancel</button><button class="btn primary" id="saveModal">Save</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const seed=[{"id":"5314-01","course":"CNEP 5314","title":"Cultural Self-Narrative Paper","due":"2026-09-14T18:00:00","type":"Paper","points":100,"note":"Due by start of Monday class."},{"id":"5314-02","course":"CNEP 5314","title":"Knowledge Check \u2014 Chs. 1, 2, 4","due":"2026-09-28T18:00:00","type":"Quiz","points":40,"note":"Due by start of class."},{"id":"5314-03","course":"CNEP 5314","title":"Knowledge Check \u2014 Chs. 5, 6, 7, 8","due":"2026-10-05T18:00:00","type":"Quiz","points":40,"note":"Due by start of class."},{"id":"5314-04","course":"CNEP 5314","title":"Film Critique & Brief Presentation","due":"2026-10-19T18:00:00","type":"Presentation","points":200,"note":"Presentation day; due by start of class."},{"id":"5314-05","course":"CNEP 5314","title":"Knowledge Check \u2014 Chs. 9, 10, 11, 13","due":"2026-11-02T18:00:00","type":"Quiz","points":40,"note":"Due by start of class."},{"id":"5314-06","course":"CNEP 5314","title":"Group Cultural Presentation","due":"2026-11-09T18:00:00","type":"Presentation","points":200,"note":"Group cultural presentation day."},{"id":"5314-07","course":"CNEP 5314","title":"Knowledge Check \u2014 Chs. 14, 15, 16","due":"2026-11-16T18:00:00","type":"Quiz","points":40,"note":"Due by start of class."},{"id":"5314-08","course":"CNEP 5314","title":"Broaching Video / Reflection Presentation","due":"2026-11-30T18:00:00","type":"Presentation","points":200,"note":"Schedule lists \u201cBroaching Reflections\u201d on presentation day."},{"id":"5314-09","course":"CNEP 5314","title":"Knowledge Check #5 \u2014 date not listed","due":null,"type":"Quiz","points":40,"verify":true,"note":"The grading section says 5 knowledge checks, but the course schedule explicitly lists only 4. Confirm the 5th date in Canvas."},{"id":"5327-01","course":"CNEP 5327","title":"Chapter 1 Quiz","due":"2026-09-02T19:00:00","type":"Quiz","points":10},{"id":"5327-02","course":"CNEP 5327","title":"Chapter 6 Quiz","due":"2026-09-09T19:00:00","type":"Quiz","points":10},{"id":"5327-03","course":"CNEP 5327","title":"Chapter 8 Quiz","due":"2026-09-16T19:00:00","type":"Quiz","points":10},{"id":"5327-04","course":"CNEP 5327","title":"Case Study","due":"2026-09-16T23:59:00","type":"Paper","points":20},{"id":"5327-05","course":"CNEP 5327","title":"Chapter 5 Quiz","due":"2026-09-23T19:00:00","type":"Quiz","points":10},{"id":"5327-06","course":"CNEP 5327","title":"Chapter 7 Quiz","due":"2026-09-30T19:00:00","type":"Quiz","points":10},{"id":"5327-07","course":"CNEP 5327","title":"Chapter 9 Quiz","due":"2026-10-07T19:00:00","type":"Quiz","points":10},{"id":"5327-08","course":"CNEP 5327","title":"Technology in Counseling Report","due":"2026-10-07T23:59:00","type":"Paper","points":30},{"id":"5327-09","course":"CNEP 5327","title":"Mid-Term Exam \u2014 Chs. 1, 5, 6, 7, 8, 9","due":"2026-10-14","type":"Exam","points":80,"verify":true,"note":"Exam date is listed; exact submission time is not specified in the syllabus schedule."},{"id":"5327-10","course":"CNEP 5327","title":"Chapter 2 Quiz","due":"2026-10-21T19:00:00","type":"Quiz","points":10},{"id":"5327-11","course":"CNEP 5327","title":"Chapter 3 Quiz","due":"2026-10-21T19:00:00","type":"Quiz","points":10},{"id":"5327-12","course":"CNEP 5327","title":"Chapter 4 Quiz","due":"2026-11-04T19:00:00","type":"Quiz","points":10},{"id":"5327-13","course":"CNEP 5327","title":"Chapter 10 Quiz","due":"2026-11-11T19:00:00","type":"Quiz","points":10},{"id":"5327-14","course":"CNEP 5327","title":"Chapter 13 Quiz","due":"2026-11-11T19:00:00","type":"Quiz","points":10},{"id":"5327-15","course":"CNEP 5327","title":"Reflective Research Paper","due":"2026-11-11T23:59:00","type":"Paper","points":30},{"id":"5327-16","course":"CNEP 5327","title":"Chapter 11 Quiz","due":"2026-11-18T19:00:00","type":"Quiz","points":10},{"id":"5327-17","course":"CNEP 5327","title":"Chapter 12 Quiz","due":"2026-11-18T19:00:00","type":"Quiz","points":10},{"id":"5327-18","course":"CNEP 5327","title":"Group Presentation","due":"2026-12-02T18:00:00","type":"Presentation","points":20,"verify":true,"note":"Presentation date is listed; tracker uses class start as the display time. Confirm any Canvas submission deadline."},{"id":"5308-01","course":"CNEP 5308","title":"Chapters 2\u20133 Quiz","due":"2026-09-03T18:00:00","type":"Quiz","note":"Pre-check quiz due before class."},{"id":"5308-02","course":"CNEP 5308","title":"Chs. 2\u20133 Case Conceptualization Worksheets","due":"2026-09-03T20:30:00","type":"Worksheet","note":"Worksheets are due by the end of class."},{"id":"5308-03","course":"CNEP 5308","title":"Chapters 4\u20135 Quiz","due":"2026-09-10T18:00:00","type":"Quiz"},{"id":"5308-04","course":"CNEP 5308","title":"Chs. 4\u20135 Case Conceptualization Worksheets","due":"2026-09-10T20:30:00","type":"Worksheet"},{"id":"5308-05","course":"CNEP 5308","title":"Chapters 6\u20137 Quiz","due":"2026-09-17T18:00:00","type":"Quiz"},{"id":"5308-06","course":"CNEP 5308","title":"Chs. 6\u20137 Case Conceptualization Worksheets","due":"2026-09-17T20:30:00","type":"Worksheet"},{"id":"5308-07","course":"CNEP 5308","title":"Midterm Exam \u2014 Chapters 1\u20137","due":"2026-10-01","type":"Exam","points":20,"verify":true,"note":"Date is specified; exact exam time is not stated in the schedule."},{"id":"5308-08","course":"CNEP 5308","title":"Chapters 8\u20139 Quiz","due":"2026-10-08T18:00:00","type":"Quiz"},{"id":"5308-09","course":"CNEP 5308","title":"Chs. 8\u20139 Case Conceptualization Worksheets","due":"2026-10-08T20:30:00","type":"Worksheet"},{"id":"5308-10","course":"CNEP 5308","title":"Chapters 10\u201311 Quiz","due":"2026-10-15T18:00:00","type":"Quiz"},{"id":"5308-11","course":"CNEP 5308","title":"Chs. 10\u201311 Case Conceptualization Worksheets","due":"2026-10-15T20:30:00","type":"Worksheet"},{"id":"5308-12","course":"CNEP 5308","title":"Chapters 12\u201313 Quiz","due":"2026-10-22T18:00:00","type":"Quiz"},{"id":"5308-13","course":"CNEP 5308","title":"Chs. 12\u201313 Case Conceptualization Worksheets","due":"2026-10-22T20:30:00","type":"Worksheet"},{"id":"5308-14","course":"CNEP 5308","title":"Theory Evaluation Worksheet","due":"2026-10-29T18:00:00","type":"Worksheet","verify":true,"note":"Listed for 10/29; exact Canvas deadline is not specified."},{"id":"5308-15","course":"CNEP 5308","title":"Chapters 14\u201315 Quiz","due":"2026-11-05T18:00:00","type":"Quiz"},{"id":"5308-16","course":"CNEP 5308","title":"Chs. 14\u201315 Case Conceptualization Worksheets","due":"2026-11-05T20:30:00","type":"Worksheet"},{"id":"5308-17","course":"CNEP 5308","title":"Chapter 16 Quiz","due":"2026-11-12T18:00:00","type":"Quiz"},{"id":"5308-18","course":"CNEP 5308","title":"Chapter 16 Case Conceptualization Worksheet","due":"2026-11-12T20:30:00","type":"Worksheet"},{"id":"5308-19","course":"CNEP 5308","title":"Draft of Personal Theoretical Model","due":"2026-11-19T18:00:00","type":"Paper","verify":true,"note":"Draft is listed for PTM exchange; exact submission method/time should be confirmed."},{"id":"5308-20","course":"CNEP 5308","title":"Final Exam \u2014 Chapters 8\u201316","due":"2026-12-03","type":"Exam","points":25,"verify":true,"note":"Date is specified; exact exam time is not stated in the schedule."},{"id":"5308-21","course":"CNEP 5308","title":"Personal Theoretical Model","due":"2026-12-03T18:00:00","type":"Paper","points":25,"verify":true,"note":"Due on 12/3; tracker uses class start as display time. Confirm Canvas deadline."},{"id":"5308-22","course":"CNEP 5308","title":"Quiz-count check in Canvas","due":null,"type":"Admin","verify":true,"note":"The requirements say 15 pre-check quizzes, while the schedule groups chapter quizzes. Confirm how Canvas separates them."},{"id":"5304-01","course":"CNEP 5304","title":"Cultural Self-Awareness & Counselor Identity Reflection","due":"2026-09-08","type":"Reflection","points":100,"verify":true,"note":"Due date is listed; exact submission time is not stated."},{"id":"5304-02","course":"CNEP 5304","title":"Quiz 1 \u2014 Chapters 1 & 2","due":"2026-09-15","type":"Quiz","points":20,"verify":true},{"id":"5304-03","course":"CNEP 5304","title":"Signed Student Handbook Acknowledgment","due":"2026-09-15","type":"Admin","verify":true},{"id":"5304-04","course":"CNEP 5304","title":"Quiz 2 \u2014 Chapters 3 & 4","due":"2026-09-22","type":"Quiz","points":20,"verify":true},{"id":"5304-05","course":"CNEP 5304","title":"Quiz 3 \u2014 Chapters 5 & 6","due":"2026-09-29","type":"Quiz","points":20,"verify":true},{"id":"5304-06","course":"CNEP 5304","title":"Quiz 4 \u2014 Chapters 7 & 8","due":"2026-10-06","type":"Quiz","points":20,"verify":true},{"id":"5304-07","course":"CNEP 5304","title":"Quiz 5 \u2014 Chapters 9 & 10","due":"2026-10-13","type":"Quiz","points":20,"verify":true},{"id":"5304-08","course":"CNEP 5304","title":"Hispanic Mental Health Professional Panel Questions","due":"2026-10-13","type":"Assignment","points":25,"verify":true},{"id":"5304-09","course":"CNEP 5304","title":"Professional Counseling Panel Participation","due":"2026-10-20T18:00:00","type":"Participation","note":"Panel occurs during class."},{"id":"5304-10","course":"CNEP 5304","title":"Quiz 6 \u2014 Chapters 11 & 12","due":"2026-10-27","type":"Quiz","points":20,"verify":true},{"id":"5304-11","course":"CNEP 5304","title":"Professional Panel Report & Reflection","due":"2026-10-27","type":"Reflection","points":75,"verify":true},{"id":"5304-12","course":"CNEP 5304","title":"Quiz 7 \u2014 Chapters 13 & 14","due":"2026-11-03","type":"Quiz","points":20,"verify":true},{"id":"5304-13","course":"CNEP 5304","title":"Professional Exploration Presentation \u2014 Groups 1\u20132","due":"2026-11-03T18:00:00","type":"Presentation","points":150,"verify":true,"note":"Relevant only if assigned to Group 1 or 2."},{"id":"5304-14","course":"CNEP 5304","title":"Quiz 8 \u2014 Chapters 15 & 16","due":"2026-11-10","type":"Quiz","points":20,"verify":true},{"id":"5304-15","course":"CNEP 5304","title":"Counseling & Hispanic Mental Health Historical Timeline","due":"2026-11-10","type":"Project","points":100,"verify":true},{"id":"5304-16","course":"CNEP 5304","title":"Professional Exploration Presentation \u2014 Groups 3\u20134","due":"2026-11-10T18:00:00","type":"Presentation","points":150,"verify":true,"note":"Relevant only if assigned to Group 3 or 4."},{"id":"5304-17","course":"CNEP 5304","title":"Quiz 9 \u2014 Chapter 17","due":"2026-11-17","type":"Quiz","points":20,"verify":true},{"id":"5304-18","course":"CNEP 5304","title":"Quiz 10 \u2014 Chapter 18","due":"2026-11-17","type":"Quiz","points":20,"verify":true},{"id":"5304-19","course":"CNEP 5304","title":"Individual Development Plan / Developing Counselor Portfolio","due":"2026-11-17","type":"Project","points":100,"verify":true},{"id":"5304-20","course":"CNEP 5304","title":"Historical Timeline Peer Engagement / Visits","due":"2026-11-17","type":"Participation","points":25,"verify":true},{"id":"5304-21","course":"CNEP 5304","title":"Final Examination","due":"2026-12-08T20:30:00","type":"Exam","points":125},{"id":"5304-22","course":"CNEP 5304","title":"Signed CNEP 5304 Checklist / Final Syllabus Acknowledgment","due":"2026-12-08T23:59:00","type":"Admin"},{"id":"5304-23","course":"CNEP 5304","title":"Cultural Case Conceptualization \u2014 due date not listed","due":null,"type":"Assignment","points":100,"verify":true,"note":"Listed as a 100-point major requirement, but no submission due date appears in the course schedule. Confirm in Canvas."}];
+const courseMeta={"CNEP 5314":{"name":"Theory & Practice of Multicultural Counseling","meeting":"Mon \u2022 6:00\u20138:30 PM","accent":"#8B5CF6"},"CNEP 5327":{"name":"Ethical & Legal Issues in Counseling","meeting":"Wed \u2022 6:00\u20138:30 PM","accent":"#0EA5E9"},"CNEP 5308":{"name":"Counseling Theories","meeting":"Thu \u2022 6:00\u20138:30 PM","accent":"#F59E0B"},"CNEP 5304":{"name":"Introduction to Counseling","meeting":"Tue \u2022 6:00\u20138:30 PM","accent":"#10B981"}};
+
+const KEY='fall26-counseling-planner-v2';
+let store=JSON.parse(localStorage.getItem(KEY)||'{}');
+store.overrides=store.overrides||{};
+store.custom=store.custom||[];
+store.progress=store.progress||{};
+store.notes=store.notes||{};
+store.subtasks=store.subtasks||{};
+store.deleted=store.deleted||{};
+let view='all';
+let editingId=null;
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+
+function save(){localStorage.setItem(KEY,JSON.stringify(store))}
+function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function courseColor(c){return courseMeta[c]?.accent||'#777'}
+function parseDue(d){if(!d)return null; return new Date(d.length===10?d+'T12:00:00':d)}
+function isDateOnly(d){return d&&d.length===10}
+function fmtDue(d){if(!d)return 'TBD'; const x=parseDue(d); let s=x.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}); if(!isDateOnly(d))s+=' • '+x.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}); return s}
+function daysUntil(d){if(!d)return Infinity; return Math.ceil((parseDue(d)-new Date())/86400000)}
+function dtLocal(d){if(!d)return ''; const x=new Date(d.length===10?d+'T12:00:00':d); const p=n=>String(n).padStart(2,'0'); return `${x.getFullYear()}-${p(x.getMonth()+1)}-${p(x.getDate())}T${p(x.getHours())}:${p(x.getMinutes())}`}
+function getProgress(id){return Math.max(0,Math.min(100,Number(store.progress[id]??0)))}
+function isDone(id){return getProgress(id)>=100}
+function mergedTask(t){return {...t,...(store.overrides[t.id]||{})}}
+function allTasks(){
+  const base=seed.filter(t=>!store.deleted[t.id]).map(mergedTask);
+  const custom=store.custom.filter(t=>!store.deleted[t.id]);
+  return [...base,...custom];
+}
+function getTask(id){return allTasks().find(t=>t.id===id)}
+
+function init(){
+  $('#todayLabel').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  Object.entries(courseMeta).forEach(([code,m])=>{
+    $('#sideCourses').insertAdjacentHTML('beforeend',`<button class="navbtn course-nav" data-course="${code}"><span class="dot" style="background:${m.accent}"></span>${code}</button>`);
+    $('#courseFilter').insertAdjacentHTML('beforeend',`<option>${code}</option>`);
+    $('#mCourse').insertAdjacentHTML('beforeend',`<option>${code}</option>`);
+  });
+  refreshTypes();
+  bind();
+  render();
+}
+
+function refreshTypes(){
+  const current=$('#typeFilter').value||'all';
+  $('#typeFilter').innerHTML='<option value="all">All types</option>';
+  [...new Set(allTasks().map(x=>x.type).filter(Boolean))].sort().forEach(t=>$('#typeFilter').insertAdjacentHTML('beforeend',`<option>${esc(t)}</option>`));
+  if([...$('#typeFilter').options].some(o=>o.value===current))$('#typeFilter').value=current;
+}
+
+function bind(){
+  $$('.navbtn[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;setActive(b);$('#courseFilter').value='all';render()});
+  $$('.course-nav').forEach(b=>b.onclick=()=>{view='all';setActive(b);$('#courseFilter').value=b.dataset.course;render()});
+  ['search','courseFilter','typeFilter','sort'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',render));
+  $('#addBtn').onclick=()=>openModal();
+  $('#cancelModal').onclick=closeModal;
+  $('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+  $('#saveModal').onclick=saveModal;
+  $('#deleteModal').onclick=deleteCurrent;
+  $('#exportBtn').onclick=exportData; $('#exportTop').onclick=exportData;
+  $('#importBtn').onclick=()=>$('#importFile').click();
+  $('#importFile').onchange=importData;
+
+  $('#board').addEventListener('click',e=>{
+    const card=e.target.closest('.task-card'); if(!card)return;
+    const id=card.dataset.id;
+    if(e.target.matches('.check'))return;
+    if(e.target.closest('[data-edit]')){e.stopPropagation();openModal(id);return}
+    if(e.target.closest('[data-delete-sub]')){e.stopPropagation();deleteSubtask(id,e.target.closest('[data-delete-sub]').dataset.deleteSub);return}
+    if(e.target.closest('[data-add-sub]')){e.stopPropagation();addSubtask(id);return}
+    if(e.target.closest('input,textarea,button'))return;
+    card.classList.toggle('open');
+  });
+
+  $('#board').addEventListener('change',e=>{
+    const card=e.target.closest('.task-card'); if(!card)return; const id=card.dataset.id;
+    if(e.target.matches('.check')){store.progress[id]=e.target.checked?100:Math.min(getProgress(id),99);save();render();}
+    if(e.target.matches('.progress-range')){store.progress[id]=Number(e.target.value);save();updateCardProgress(card,id);}
+    if(e.target.matches('.progress-number')){store.progress[id]=Math.max(0,Math.min(100,Number(e.target.value)||0));save();render();}
+    if(e.target.matches('.subcheck')){const sid=e.target.dataset.sid; let a=store.subtasks[id]||[]; let s=a.find(x=>x.id===sid); if(s)s.done=e.target.checked; store.subtasks[id]=a; autoProgressFromSubtasks(id); save(); render();}
+  });
+
+  $('#board').addEventListener('input',e=>{
+    const card=e.target.closest('.task-card'); if(!card)return; const id=card.dataset.id;
+    if(e.target.matches('.progress-range')){store.progress[id]=Number(e.target.value);updateCardProgress(card,id);save();}
+    if(e.target.matches('.progress-notes')){store.notes[id]=e.target.value;save();}
+    if(e.target.matches('.subtext')){const sid=e.target.dataset.sid; let a=store.subtasks[id]||[]; let s=a.find(x=>x.id===sid); if(s)s.text=e.target.value; store.subtasks[id]=a; save();}
+  });
+
+  $('#board').addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&e.target.matches('.new-subtask')){e.preventDefault();const id=e.target.closest('.task-card').dataset.id;addSubtask(id)}
+  });
+}
+
+function setActive(b){$('.navbtn.active')?.classList.remove('active');b.classList.add('active')}
+
+function render(){
+  refreshTypes();
+  const tasks=allTasks();
+  const completed=tasks.filter(t=>isDone(t.id)).length;
+  const active=tasks.filter(t=>getProgress(t.id)>0&&getProgress(t.id)<100).length;
+  const overdue=tasks.filter(t=>t.due&&!isDone(t.id)&&daysUntil(t.due)<0).length;
+  const soon=tasks.filter(t=>t.due&&!isDone(t.id)&&daysUntil(t.due)>=0&&daysUntil(t.due)<=7).length;
+  const avg=tasks.length?Math.round(tasks.reduce((s,t)=>s+getProgress(t.id),0)/tasks.length):0;
+  $('#stats').innerHTML=`
+    <div class="stat"><div class="n">${completed}/${tasks.length}</div><div class="l">Completed</div></div>
+    <div class="stat"><div class="n">${active}</div><div class="l">In progress</div></div>
+    <div class="stat"><div class="n">${soon}</div><div class="l">Due in 7 days</div></div>
+    <div class="stat"><div class="n">${overdue}</div><div class="l">Past due</div></div>
+    <div class="stat"><div class="n">${avg}%</div><div class="l">Overall progress</div></div>`;
+
+  $('#courseGrid').innerHTML=Object.entries(courseMeta).map(([c,m])=>{
+    const ct=tasks.filter(t=>t.course===c); const avgc=ct.length?Math.round(ct.reduce((s,t)=>s+getProgress(t.id),0)/ct.length):0;
+    const done=ct.filter(t=>isDone(t.id)).length;
+    return `<div class="course-card"><span class="pill"><span class="dot" style="background:${m.accent}"></span>${c}</span><h3>${m.name}</h3><p>${m.meeting} · ${done}/${ct.length} complete · ${avgc}% progress</p><div class="bar"><span style="width:${avgc}%;background:${m.accent}"></span></div></div>`;
+  }).join('');
+
+  let list=tasks.slice();
+  const q=$('#search').value.trim().toLowerCase(), cf=$('#courseFilter').value, tf=$('#typeFilter').value;
+  if(q)list=list.filter(t=>(t.title+' '+(t.note||'')+' '+(store.notes[t.id]||'')+' '+t.course+' '+t.type).toLowerCase().includes(q));
+  if(cf!=='all')list=list.filter(t=>t.course===cf);
+  if(tf!=='all')list=list.filter(t=>t.type===tf);
+  if(view==='active')list=list.filter(t=>getProgress(t.id)>0&&getProgress(t.id)<100);
+  if(view==='upcoming')list=list.filter(t=>!isDone(t.id)&&t.due&&daysUntil(t.due)>=0&&daysUntil(t.due)<=14);
+  if(view==='verify')list=list.filter(t=>t.verify&&!isDone(t.id));
+  if(view==='done')list=list.filter(t=>isDone(t.id));
+
+  const sort=$('#sort').value;
+  list.sort((a,b)=>{
+    if(sort==='progress')return getProgress(a.id)-getProgress(b.id)||dueNum(a)-dueNum(b);
+    if(sort==='course')return a.course.localeCompare(b.course)||dueNum(a)-dueNum(b);
+    if(sort==='type')return (a.type||'').localeCompare(b.type||'')||dueNum(a)-dueNum(b);
+    return dueNum(a)-dueNum(b);
+  });
+
+  const titles={all:'Assignments',active:'In progress',upcoming:'Upcoming — next 14 days',verify:'Needs Canvas confirmation',done:'Completed'};
+  $('#viewTitle').textContent=titles[view];
+  $('#viewMeta').textContent=`${list.length} item${list.length===1?'':'s'} shown`;
+  $('#board').innerHTML=list.map(taskCard).join('');
+  $('#empty').hidden=!!list.length;
+}
+
+function dueNum(t){return parseDue(t.due)?.getTime()??9e15}
+
+function taskCard(t){
+  const p=getProgress(t.id), du=daysUntil(t.due);
+  const dclass=(!isDone(t.id)&&du<0)?'overdue':(!isDone(t.id)&&du<=3&&du>=0)?'soon':'';
+  const subs=store.subtasks[t.id]||[];
+  return `<article class="task-card ${isDone(t.id)?'done':''}" data-id="${t.id}">
+    <div class="task-main">
+      <div class="task-title-row">
+        <input class="check" type="checkbox" ${isDone(t.id)?'checked':''} aria-label="Mark complete">
+        <div>
+          <div class="task-title">${esc(t.title)} ${t.verify?'<span class="pill verify">Verify in Canvas</span>':''} ${t.custom?'<span class="pill">Custom</span>':''}</div>
+          <div class="task-note">${esc(t.note||'')}${subs.length?` · ${subs.filter(s=>s.done).length}/${subs.length} subtasks`:''}</div>
+        </div>
+      </div>
+      <div class="progress-col"><div class="progress-wrap"><div class="progress-track"><div class="progress-fill" style="width:${p}%"></div></div><span class="progress-label">${p}%</span></div></div>
+      <div class="due-col ${dclass}">${fmtDue(t.due)}</div>
+      <div class="type-col"><span class="pill"><span class="dot" style="background:${courseColor(t.course)}"></span>${t.course}</span><div class="tiny" style="margin-top:5px">${esc(t.type||'Assignment')}${t.points!=null?` · ${t.points} pts`:''}</div></div>
+      <div class="task-actions"><button class="iconbtn" data-edit title="Edit assignment">Edit</button></div>
+    </div>
+    <div class="details">
+      <div class="detail-grid">
+        <div>
+          <div class="detail-title">Assignment progress</div>
+          <div class="range-row">
+            <input class="progress-range" type="range" min="0" max="100" step="5" value="${p}">
+            <input class="field progress-number" type="number" min="0" max="100" value="${p}">
+          </div>
+          <div class="detail-title" style="margin-top:14px">Progress notes</div>
+          <textarea class="progress-notes" placeholder="Example: outline finished; need 2 more sources; revise intro…">${esc(store.notes[t.id]||'')}</textarea>
+        </div>
+        <div>
+          <div class="detail-title">Subtasks</div>
+          <div class="subtask-list">${subs.length?subs.map(s=>`<div class="subtask"><input class="subcheck" type="checkbox" data-sid="${s.id}" ${s.done?'checked':''}><input class="subtext" type="text" data-sid="${s.id}" value="${esc(s.text)}"><button class="iconbtn" data-delete-sub="${s.id}" title="Delete subtask">×</button></div>`).join(''):'<div class="tiny">No subtasks yet.</div>'}</div>
+          <div class="subadd"><input class="new-subtask" placeholder="Add a step, reading, draft, etc."><button class="btn" data-add-sub>Add</button></div>
+        </div>
+      </div>
+    </div>
+  </article>`;
+}
+
+function updateCardProgress(card,id){
+  const p=getProgress(id);
+  card.querySelector('.progress-fill').style.width=p+'%';
+  card.querySelector('.progress-label').textContent=p+'%';
+  const n=card.querySelector('.progress-number'); if(n)n.value=p;
+  const c=card.querySelector('.check'); if(c)c.checked=p>=100;
+  card.classList.toggle('done',p>=100);
+}
+
+function autoProgressFromSubtasks(id){
+  const a=store.subtasks[id]||[];
+  if(!a.length)return;
+  const pct=Math.round(a.filter(x=>x.done).length/a.length*100);
+  store.progress[id]=pct;
+}
+
+function addSubtask(id){
+  const card=document.querySelector(`.task-card[data-id="${id}"]`);
+  const input=card?.querySelector('.new-subtask'); const text=input?.value.trim();
+  if(!text)return;
+  const a=store.subtasks[id]||[];
+  a.push({id:'sub-'+Date.now()+'-'+Math.random().toString(16).slice(2),text,done:false});
+  store.subtasks[id]=a; autoProgressFromSubtasks(id); save(); render();
+  setTimeout(()=>document.querySelector(`.task-card[data-id="${id}"]`)?.classList.add('open'),0);
+}
+
+function deleteSubtask(id,sid){
+  store.subtasks[id]=(store.subtasks[id]||[]).filter(x=>x.id!==sid);
+  autoProgressFromSubtasks(id); save(); render();
+  setTimeout(()=>document.querySelector(`.task-card[data-id="${id}"]`)?.classList.add('open'),0);
+}
+
+function openModal(id=null){
+  editingId=id;
+  const t=id?getTask(id):null;
+  $('#modalTitle').textContent=id?'Edit assignment':'Add a new task';
+  $('#mTitle').value=t?.title||'';
+  $('#mCourse').value=t?.course||Object.keys(courseMeta)[0];
+  $('#mType').value=t?.type||'Assignment';
+  $('#mDue').value=dtLocal(t?.due);
+  $('#mPoints').value=t?.points??'';
+  $('#mProgress').value=id?getProgress(id):0;
+  $('#mVerify').value=String(!!t?.verify);
+  $('#mNote').value=t?.note||'';
+  $('#deleteModal').hidden=!id;
+  $('#modal').classList.add('open');
+  setTimeout(()=>$('#mTitle').focus(),50);
+}
+function closeModal(){$('#modal').classList.remove('open');editingId=null}
+
+function saveModal(){
+  const title=$('#mTitle').value.trim(); if(!title){alert('Give the task a name first.');return}
+  const data={
+    title,
+    course:$('#mCourse').value,
+    type:$('#mType').value.trim()||'Assignment',
+    due:$('#mDue').value?$('#mDue').value+':00':null,
+    points:$('#mPoints').value===''?null:Number($('#mPoints').value),
+    verify:$('#mVerify').value==='true',
+    note:$('#mNote').value.trim()
+  };
+  const progress=Math.max(0,Math.min(100,Number($('#mProgress').value)||0));
+  if(editingId){
+    if(editingId.startsWith('custom-')){
+      const i=store.custom.findIndex(x=>x.id===editingId); if(i>=0)store.custom[i]={...store.custom[i],...data,custom:true};
+    } else {
+      store.overrides[editingId]=data;
+    }
+    store.progress[editingId]=progress;
+  } else {
+    const id='custom-'+Date.now();
+    store.custom.push({id,...data,custom:true});
+    store.progress[id]=progress;
+  }
+  save(); closeModal(); refreshTypes(); render();
+}
+
+function deleteCurrent(){
+  if(!editingId)return;
+  const t=getTask(editingId);
+  if(!confirm(`Delete "${t?.title||'this task'}" from your planner?`))return;
+  if(editingId.startsWith('custom-')) store.custom=store.custom.filter(x=>x.id!==editingId);
+  else store.deleted[editingId]=true;
+  delete store.progress[editingId]; delete store.notes[editingId]; delete store.subtasks[editingId]; delete store.overrides[editingId];
+  save(); closeModal(); render();
+}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify({version:2,store,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fall-2026-counseling-planner-backup.json';a.click();URL.revokeObjectURL(a.href);
+}
+async function importData(e){
+  const f=e.target.files[0]; if(!f)return;
+  try{const x=JSON.parse(await f.text()); store=x.store||x; store.overrides=store.overrides||{};store.custom=store.custom||[];store.progress=store.progress||{};store.notes=store.notes||{};store.subtasks=store.subtasks||{};store.deleted=store.deleted||{};save();render();alert('Planner data imported.');}
+  catch{alert('That backup file could not be imported.')}
+  e.target.value='';
+}
+init();
+</script>
+</body>
+</html>
